@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recreate Layout</title>
+  <style>
+    /* General styling for body */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+
+    /* Container to hold the grid layout */
+    .container {
+      display: grid;
+      grid-template-rows: 1fr 1fr; /* Two equal rows */
+      width : 100%; /*
+      gap: 10px; /* Space between rows */
+      height: 100vh; /* Full viewport height */
+    }
+
+    /* Align the top section content to the right */
+    .section-one-container {
+      margin-left: auto; /* Push content to the right */
+      display: flex;
+    }
+
+    /* Grid for the first section */
+    .section-one {
+      display: grid;
+      grid-template-columns: 4fr 2fr 2fr 2fr; /* 4 columns with different sizes */
+      gap: 10px;
+      background-color: orange;
+      padding: 10px;
+    }
+
+     /* Container to split the right section into three equal boxes */
+     .right-boxes {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr; /* Three equal boxes */
+      gap: 10px;
+    }
+
+    /* Grid for the second section */
+    .section-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 columns with different sizes */
+      gap: 10px;
+      background-color: green;
+      padding: 10px;
+    }
+
+    /* Styling for each box */
+    .box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      padding: 20px;
+    }
+    
+     /* Top-left alignment for text inside boxes */
+     .top-left {
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 10px;
+    }
+    /* Specific colors for the boxes */
+    .box1 {
+      background-color: black;
+    }
+
+    .box2 {
+      background-color: blue;
+    }
+
+    .box3 {
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- First section with three boxes -->
+    <div class="section-one">
+      <div class="box box1">Three</div>
+      <div class="box box1">Two</div>
+      <div class="box box1">One</div>
+    </div>
+
+    <!-- Second section with three boxes -->
+    <div class="section-two">
+      <div class="box box2">One</div>
+      <div class="box box3">Three</div>
+      <div class="box box2">Two</div>
+    </div>
+  </div>
+</body>
+</html>
+

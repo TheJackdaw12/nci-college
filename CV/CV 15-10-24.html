@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>James Canning Resume</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .section {
+            border: 5px outset rgb(2, 12, 11);
+            background-color: lightblue;
+            padding: 20px;
+            text-align: center;
+            flex: 1 1 30%; /* Adjust for three columns */
+            margin: 10px;
+        }
+
+        .contact-info, .social-media {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .social-media a {
+            margin: 0 10px;
+            text-decoration: none;
+            font-size: 20px;
+            color: black;
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 768px) {
+            .section {
+                flex: 1 1 100%; /* Stack the sections vertically on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>James Canning CV</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Skills</h2>
+            <p>Java</p>
+            <p>Python</p>
+            <p>CSS</p>
+        </div>
+        
+        <div class="section">
+            <h2>Experience</h2>
+            <p>Software Engineer June 2024 - Present</p>
+        </div>
+        
+        <div class="section">
+            <h2>Contact Information</h2>
+            <p>Email: jcanning907@gmail.com</p>
+            <p>Phone: 0894330801</p>
+        </div>
+    </div>
+
+    <div class="social-media">
+        <a href="#" class="fa fa-facebook"></a>
+        <a href="https://x.com/JamesCa62210118" class="fa fa-twitter"></a>
+    </div>
+</body>
+</html>
