@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semester Two Results | NCI</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f2f7;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  /* ── Password gate ── */
+  #gate {
+    position: fixed;
+    inset: 0;
+    background: #0a2240;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .gate-box {
+    background: white;
+    border-radius: 8px;
+    padding: 40px 44px 36px;
+    width: 360px;
+    text-align: center;
+  }
+
+  .gate-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .gate-logo .nci-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0a2240;
+    letter-spacing: 1px;
+  }
+
+  .gate-logo .nci-sub {
+    font-size: 9px;
+    color: #6b7a94;
+    line-height: 1.5;
+    text-align: left;
+    border-left: 1px solid #c8d0df;
+    padding-left: 8px;
+    margin-left: 2px;
+  }
+
+  .gate-box h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0a2240;
+    margin-bottom: 6px;
+  }
+
+  .gate-box p {
+    font-size: 12.5px;
+    color: #7a869a;
+    margin-bottom: 22px;
+  }
+
+  .gate-box input[type="password"] {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 14px;
+    border: 1.5px solid #c8d0e0;
+    border-radius: 5px;
+    outline: none;
+    margin-bottom: 12px;
+    color: #1a2438;
+    letter-spacing: 2px;
+  }
+
+  .gate-box input[type="password"]:focus {
+    border-color: #006eb6;
+  }
+
+  .gate-box button {
+    width: 100%;
+    padding: 11px;
+    background: #006eb6;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .gate-box button:hover { background: #005a95; }
+
+  .gate-error {
+    font-size: 12px;
+    color: #c0392b;
+    margin-top: 10px;
+    display: none;
+  }
+
+  /* ── Results page (hidden until unlocked) ── */
+  #results-page { display: none; }
+
+  /* Minimal NCI header */
+  .nci-header {
+    background: #0a2240;
+    padding: 16px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nci-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nci-logo .nci-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 1px;
+  }
+
+  .nci-logo .nci-sub {
+    font-size: 9px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.5;
+    border-left: 1px solid rgba(255,255,255,0.3);
+    padding-left: 8px;
+  }
+
+  .header-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.4px;
+  }
+
+  .accent-stripe {
+    height: 4px;
+    background: #006eb6;
+  }
+
+  /* Main */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  /* Page title */
+  .page-title {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #0a2240;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .page-title h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0a2240;
+  }
+
+  .page-title .subtitle {
+    font-size: 12.5px;
+    color: #7a869a;
+    margin-top: 4px;
+  }
+
+  .btn-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #006eb6;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 22px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+
+  .btn-pdf:hover { background: #005a95; }
+
+  /* Student block */
+  .student-block {
+    background: white;
+    border: 1px solid #d8dde8;
+    border-radius: 6px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 20px;
+    font-size: 13px;
+  }
+
+  .student-block .field { color: #8090a8; }
+  .student-block .value { color: #1a2438; font-weight: 500; }
+
+  .student-block .full-row {
+    grid-column: 1 / -1;
+    border-top: 1px solid #eef0f7;
+    padding-top: 10px;
+    margin-top: 4px;
+  }
+
+  /* Results table */
+  .results-wrap {
+    background: white;
+    border: 1px solid #d8dde8;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+
+  .sem-header {
+    background: #0a2240;
+    padding: 11px 22px;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sem-header span { color: rgba(255,255,255,0.55); font-weight: 400; letter-spacing: 0; text-transform: none; font-size: 11px; }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    background: #f7f9fc;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #8090a8;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 9px 22px;
+    text-align: left;
+    border-bottom: 1px solid #e8ecf3;
+  }
+
+  thead th.c { text-align: center; }
+
+  tbody tr { border-bottom: 1px solid #f0f3f8; }
+  tbody tr:last-child { border-bottom: none; }
+
+  tbody td {
+    padding: 12px 22px;
+    font-size: 13px;
+    color: #2a3148;
+    vertical-align: middle;
+  }
+
+  .module-code {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #8090a8;
+    font-weight: 600;
+  }
+
+  .c { text-align: center; }
+
+  .grade-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 3px;
+    font-size: 11.5px;
+    font-weight: 700;
+  }
+
+  .grade-a1 { background: #d4edda; color: #155724; }
+  .grade-a2 { background: #dff0e8; color: #1a6136; }
+  .grade-b1 { background: #d6e8f7; color: #0c4a80; }
+
+  .sem-total td {
+    background: #eef2fa;
+    font-weight: 700;
+    color: #0a2240;
+    font-size: 12.5px;
+    border-top: 1.5px solid #c5d0e4;
+  }
+
+  /* Classification banner */
+  .classification {
+    background: #0a2240;
+    border-radius: 6px;
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .classification .left h3 {
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 5px;
+  }
+
+  .classification .left .award {
+    font-size: 17px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 3px;
+  }
+
+  .classification .left .detail {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .honours-pill {
+    background: #006eb6;
+    color: white;
+    font-size: 13.5px;
+    font-weight: 800;
+    padding: 11px 22px;
+    border-radius: 5px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+
+  .honours-pill .sub {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    margin-top: 3px;
+  }
+
+  /* Footer note */
+  .footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: #a0a8b8;
+    margin-top: 10px;
+  }
+
+  @media print {
+    body { background: white; }
+    .btn-pdf { display: none; }
+    .accent-stripe { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Password gate -->
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <span class="nci-name">NCI</span>
+      <span class="nci-sub">Coláiste Náisiúnta<br>National College of Ireland</span>
+    </div>
+    <h2>Semester Two Results</h2>
+    <p>Enter your password to access your results</p>
+    <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()" />
+    <button onclick="checkPw()">View Results</button>
+    <div class="gate-error" id="pw-error">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- Results page -->
+<div id="results-page">
+
+  <header class="nci-header">
+    <div class="nci-logo">
+      <span class="nci-name">NCI</span>
+      <span class="nci-sub">Coláiste Náisiúnta<br>National College of Ireland</span>
+    </div>
+    <span class="header-label">Student Academic Transcript &mdash; 2024–2026</span>
+  </header>
+  <div class="accent-stripe"></div>
+
+  <main class="main">
+
+    <div class="page-title">
+      <div>
+        <h1>Semester Two Results</h1>
+        <div class="subtitle">BSc (Hons) Computing &mdash; Computer Science &amp; Software Development &nbsp;|&nbsp; NFQ Level 8</div>
+      </div>
+      <button class="btn-pdf" onclick="window.print()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"/>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        Download transcript
+      </button>
+    </div>
+
+    <!-- Student details -->
+    <div class="student-block">
+      <div>
+        <span class="field">Student name</span><br>
+        <span class="value">James Canning</span>
+      </div>
+      <div>
+        <span class="field">Student ID</span><br>
+        <span class="value">X24128571</span>
+      </div>
+      <div>
+        <span class="field">Student email</span><br>
+        <span class="value">x24128571@student.ncirl.ie</span>
+      </div>
+      <div>
+        <span class="field">Year of study</span><br>
+        <span class="value">Year 2 &nbsp;&bull;&nbsp; Full-time</span>
+      </div>
+      <div class="full-row">
+        <span class="field">Programme &nbsp;&nbsp;</span>
+        <span class="value">BSc (Hons) Computing &mdash; Computer Science &amp; Software Development &nbsp;|&nbsp; NFQ Level 8 &nbsp;|&nbsp; Academic Year 2024–2026</span>
+      </div>
+    </div>
+
+    <!-- Semester 1 -->
+    <div class="results-wrap">
+      <div class="sem-header">Semester 1 <span>September &ndash; January</span></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Module code</th>
+            <th>Module title</th>
+            <th class="c">Credits</th>
+            <th class="c">Mark</th>
+            <th class="c">Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="module-code">CSSD2101</span></td>
+            <td>Data Structures &amp; Algorithms</td>
+            <td class="c">6</td>
+            <td class="c">78%</td>
+            <td class="c"><span class="grade-badge grade-a2">A2</span></td>
+          </tr>
+          <tr>
+            <td><span class="module-code">CSSD2102</span></td>
+            <td>Object-Oriented Software Engineering</td>
+            <td class="c">6</td>
+            <td class="c">75%</td>
+            <td class="c"><span class="grade-badge grade-a2">A2</span></td>
+          </tr>
+          <tr>
+            <td><span class="module-code">CSSD2103</span></td>
+            <td>Database Design &amp; Administration</td>
+            <td class="c">6</td>
+            <td class="c">72%</td>
+            <td class="c"><span class="grade-badge grade-a2">A2</span></td>
+          </tr>
+          <tr>
+            <td><span class="module-code">CSSD2104</span></td>
+            <td>Operating Systems &amp; Systems Programming</td>
+            <td class="c">6</td>
+            <td class="c">71%</td>
+            <td class="c"><span class="grade-badge grade-a2">A2</span></td>
+          </tr>
+          <tr>
+            <td><span class="module-code">CSSD2105</span></td>
+            <td>Discrete Mathematics for Computing</td>
+            <td class="c">6</td>
+            <td class="c">73%</td>
+            <td class="c"><span class="grade-badge grade-a2">A2</span></td>
+          </tr>
+          <tr class="sem-total">
+            <td colspan="2" style="padding-left:22px">Semester 1 average</td>
+            <td class="c">30</td>
+            <td class="c">73.8%</td>
+            <td class="c">A2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Semester 2 -->
+    <div class="results-wrap">
+      <div class="sem-header">Semester 2 <span>January &ndash; May</span></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Module code</th>
+            <th>Module title</th>
+            <th class="c">Credits</th>
+            <th class="c">Mark</th>
+            <th class="c">Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="module-code">CSSD2201</span></td>
+            <td>Web Technologies &amp; Full-Stack Development</td>
+            <td class="c">6</td>
+            <td class="c">80%</td>
+            <td class="c"><span class="grade-badge grade-a1">A1</span></td>
+          </tr>
+          <tr>
+            <td><span class="module-code">CSSD2202</span></td>
+            <td>Computer Networks &amp; Security</td>
+            <td class="c">6</td>
+            <td class="c">70%</td>
+            <td class="c"><span class="grade-badge grade-b1">B1</span></td>
+          </tr>
+          <tr>
+            <td><span class="module-code">CSSD2203</span></td>
+            <td>Software Architecture &amp; Design Patterns</td>
+            <td class="c">6</td>
+            <td class="c">76%</td>
+            <td class="c"><span class="grade-badge grade-a2">A2</span></td>
+          </tr>
+          <tr>
+            <td><span class="module-code">CSSD2204</span></td>
+            <td>Agile Project Management &amp; Professional Practice</td>
+            <td class="c">6</td>
+            <td class="c">74%</td>
+            <td class="c"><span class="grade-badge grade-a2">A2</span></td>
+          </tr>
+          <tr>
+            <td><span class="module-code">CSSD2205</span></td>
+            <td>Artificial Intelligence &amp; Machine Learning Fundamentals</td>
+            <td class="c">6</td>
+            <td class="c">72%</td>
+            <td class="c"><span class="grade-badge grade-a2">A2</span></td>
+          </tr>
+          <tr class="sem-total">
+            <td colspan="2" style="padding-left:22px">Semester 2 average</td>
+            <td class="c">30</td>
+            <td class="c">74.4%</td>
+            <td class="c">A2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Classification -->
+    <div class="classification">
+      <div class="left">
+        <h3>Year 2 final classification</h3>
+        <div class="award">BSc (Hons) Computing &mdash; Year 2 Progression</div>
+        <div class="detail">National College of Ireland &nbsp;&bull;&nbsp; NFQ Level 8 &nbsp;&bull;&nbsp; 2024–2026</div>
+      </div>
+      <div class="honours-pill">
+        FIRST CLASS HONOURS
+        <span class="sub">Overall: 74.1% &nbsp;&bull;&nbsp; 1:1</span>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      National College of Ireland &mdash; Mayor Street Upper, IFSC, Dublin 1, D01 K8N7 &mdash; www.ncirl.ie
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function checkPw() {
+    var val = document.getElementById('pw-input').value;
+    if (val === 'jcanning907') {
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('results-page').style.display = 'block';
+    } else {
+      var err = document.getElementById('pw-error');
+      err.style.display = 'block';
+      document.getElementById('pw-input').value = '';
+      document.getElementById('pw-input').focus();
+    }
+  }
+</script>
+
+</body>
+</html>
